@@ -1,5 +1,64 @@
 # 更改日志
 
+# 发布 1.7 - 7/8/2020
+
+## 主要功能
+
+### 训练平台
+
+* 支持 AML (Azure Machine Learning) 作为训练平台。
+* OpenPAI 任务可被重用。 当 Trial 完成时， OpenPAI 任务不会停止， 而是等待下一个 Trial。 [参考 OpenPAI 设置中的 reuse 标志](https://github.com/microsoft/nni/blob/master/docs/zh_CN/TrainingService/PaiMode.md#openpai-configurations)。
+* [支持在向训练平台上传代码目录时使用 .nniignore 忽略代码目录中的文件和目录](https://github.com/microsoft/nni/blob/v1.7/docs/en_US/TrainingService/Overview.md#how-to-use-training-service)。
+
+### 神经网络架构搜索（NAS）
+
+* [为 NAS 基准测试 (NasBench101, NasBench201, NDS) 提供了友好的 API](https://github.com/microsoft/nni/blob/v1.7/docs/en_US/NAS/Benchmarks.md)。
+
+* [在 TensorFlow 2.X 支持 Classic NAS（即非权重共享模式）](https://github.com/microsoft/nni/blob/v1.7/docs/en_US/NAS/ClassicNas.md)。
+
+### 模型压缩
+
+* 改进模型加速：跟踪层之间的更多依赖关系，自动解决掩码冲突，支持剪枝 ResNet 的加速
+* 增加新的 Pruner，包括 3 个模型剪枝算法：[NetAdapt Pruner](https://github.com/microsoft/nni/blob/v1.7/docs/en_US/Compressor/Pruner.md#netadapt-pruner)，[SimulatedAnnealing Pruner](https://github.com/microsoft/nni/blob/v1.7/docs/en_US/Compressor/Pruner.md#simulatedannealing-pruner)， [AutoCompress Pruner](https://github.com/microsoft/nni/blob/v1.7/docs/en_US/Compressor/Pruner.md#autocompress-pruner) 和 [ADMM Pruner](https://github.com/microsoft/nni/blob/v1.7/docs/en_US/Compressor/Pruner.md#admm-pruner)
+* 添加[模型敏感性分析工具](https://github.com/microsoft/nni/blob/v1.7/docs/en_US/Compressor/CompressionUtils.md)来帮助用户发现各层对剪枝的敏感性
+* [用于模型压缩和 NAS 的简易 FLOPs 计算工具](https://github.com/microsoft/nni/blob/v1.7/docs/en_US/Compressor/CompressionUtils.md#model-flops-parameters-counter)
+
+* 更新 Lottery Ticket Pruner 以导出中奖彩票
+
+### 示例
+
+* 在 NNI 上使用新的[自定义调优器 OpEvo](https://github.com/microsoft/nni/blob/v1.7/docs/en_US/TrialExample/OpEvoExamples.md) 自动优化张量算子
+
+### 内置 Tuner、Assessor、Advisor
+
+* [允许自定义 Tuner、Assessor、Advisor 被安装为内置算法](https://github.com/microsoft/nni/blob/v1.7/docs/en_US/Tutorial/InstallCustomizedAlgos.md)
+
+### Web 界面
+
+* 支持更友好的嵌套搜索空间可视化。
+* 在超参数图中展示 Trial 的字典的键
+* 增强 Trial 持续时间展示
+
+### 其它
+
+* 提供工具函数用于合并从 NNI 获取到的参数
+* 支持在 OpenPAI 模式中设置 paiStorageConfigName
+
+## 文档
+
+* 改进[模型压缩文档](https://github.com/microsoft/nni/blob/v1.7/docs/en_US/Compressor/Overview.md)
+* 改进 NAS 基准测试的[文档](https://github.com/microsoft/nni/blob/v1.7/docs/en_US/NAS/Benchmarks.md)和[示例](https://github.com/microsoft/nni/blob/v1.7/docs/en_US/NAS/BenchmarksExample.ipynb)
+* 改进 [AzureML 训练平台的文档](https://github.com/microsoft/nni/blob/v1.7/docs/en_US/TrainingService/AMLMode.md)
+* 主页迁移到 readthedoc。
+
+## 修复的 Bug
+
+* 修复模型图中含有共享的 nn.Module 时的问题
+* 修复 `make build` 时的 nodejs OOM
+* 修复 NASUI Bug
+* 修复持续时间和中间结果图片更新问题
+* 修复小的 Web 界面表格样式问题
+
 ## 发布 1.6 - 5/26/2020
 
 ### 主要功能
@@ -351,8 +410,8 @@
 * 修复表格的 Bug
 * 优化嵌套搜索空间
 * 优化 'randint' 类型，并支持下限
-* [比较不同超参搜索调优算法](CommunitySharings/HpoComparision.md)
-* [NAS 算法的对比](CommunitySharings/NasComparision.md)
+* [比较不同超参搜索调优算法](CommunitySharings/HpoComparison.md)
+* [NAS 算法的对比](CommunitySharings/NasComparison.md)
 * [Recommenders 上的实践](CommunitySharings/RecommendersSvd.md)
 
 ## 发布 0.7 - 4/29/2018
@@ -564,7 +623,7 @@
 
 ### 支持新的 Tuner
 
-* **Batch Tuner（批处理调参器）** 会执行所有超参组合，可被用来批量提交 Trial 任务。
+* **Batch Tuner（批处理调参器）** 会执行所有曹参组合，可被用来批量提交尝试任务。
 
 ### 新示例
 

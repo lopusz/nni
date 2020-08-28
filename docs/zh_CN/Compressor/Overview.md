@@ -42,6 +42,7 @@ NNI 的模型压缩工具包，提供了最先进的模型压缩算法和策略�
 | [SimulatedAnnealing Pruner](https://nni.readthedocs.io/zh/latest/Compressor/Pruner.html#simulatedannealing-pruner)           | 通过启发式的模拟退火算法进行自动剪枝 [参考论文](https://arxiv.org/abs/1907.03141)                                                                                   |
 | [AutoCompress Pruner](https://nni.readthedocs.io/zh/latest/Compressor/Pruner.html#autocompress-pruner)                       | 通过迭代调用 SimulatedAnnealing Pruner 和 ADMM Pruner 进行自动剪枝 [参考论文](https://arxiv.org/abs/1907.03141)                                                |
 
+参考此[基准测试](https://github.com/microsoft/nni/tree/master/docs/en_US/Benchmark.md)来查看这些剪枝器在一些基准问题上的表现。
 
 ### 量化算法
 
@@ -64,7 +65,7 @@ NNI 的模型压缩工具包，提供了最先进的模型压缩算法和策略�
 
 ## 压缩工具
 
-压缩工具包括了一些有用的工具，能帮助用户理解并分析要压缩的模型。 例如，可检查每层对剪枝的敏感度。 可很容易的计算模型的 FLOPs 和参数数量。 [点击这里](./CompressionUtils.md)，查看压缩工具的完整列表。
+压缩工具包括了一些有用的工具，能帮助用户理解并分析要压缩的模型。 例如，可检查每层对剪枝的敏感度。 可很容易地计算模型的 FLOPs 和参数数量。 点击[这里](./CompressionUtils.md)，查看压缩工具的完整列表。
 
 ## 自定义压缩算法
 
