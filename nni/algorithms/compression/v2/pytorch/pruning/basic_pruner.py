@@ -37,7 +37,8 @@ from .tools import (
     SparsityAllocator,
     NormalSparsityAllocator,
     GlobalSparsityAllocator,
-    Conv2dDependencyAwareAllocator
+    Conv2dDependencyAwareAllocator,
+    AttentionHeadDependencyAwareAllocator
 )
 
 _logger = logging.getLogger(__name__)
@@ -622,7 +623,7 @@ class TaylorFOWeightPruner(BasicPruner):
 
     def __init__(self, model: Module, config_list: List[Dict], trainer: Callable[[Module, Optimizer, Callable], None],
                  traced_optimizer: SerializableObject, criterion: Callable[[Tensor, Tensor], Tensor], training_batches: int,
-                 mode: str = 'normal', dummy_input: Optional[Tensor] = None):
+                 mode: str = 'normal', dummy_input: Optional[Tensor] = None, dim: int = 0, block_sparse_size: List = None):
         self.mode = mode
         self.dummy_input = dummy_input
         self.trainer = trainer
@@ -632,6 +633,8 @@ class TaylorFOWeightPruner(BasicPruner):
             self.optimizer_helper = OptimizerConstructHelper.from_trace(model, traced_optimizer)
         self.criterion = criterion
         self.training_batches = training_batches
+        self.dim = dim
+        self.block_sparse_size = block_sparse_size
         super().__init__(model, config_list)
 
     def _validate_config_before_canonical(self, model: Module, config_list: List[Dict]):
@@ -664,14 +667,16 @@ class TaylorFOWeightPruner(BasicPruner):
         else:
             self.data_collector.reset()
         if self.metrics_calculator is None:
-            self.metrics_calculator = MultiDataNormMetricsCalculator(p=1, dim=0)
+            self.metrics_calculator = MultiDataNormMetricsCalculator(p=1, dim=self.dim, block_sparse_size=self.block_sparse_size)
         if self.sparsity_allocator is None:
             if self.mode == 'normal':
-                self.sparsity_allocator = NormalSparsityAllocator(self, dim=0)
+                self.sparsity_allocator = NormalSparsityAllocator(self, dim=self.dim, block_sparse_size=self.block_sparse_size)
             elif self.mode == 'global':
-                self.sparsity_allocator = GlobalSparsityAllocator(self, dim=0)
+                self.sparsity_allocator = GlobalSparsityAllocator(self, dim=self.dim, block_sparse_size=self.block_sparse_size)
             elif self.mode == 'dependency_aware':
-                self.sparsity_allocator = Conv2dDependencyAwareAllocator(self, 0, self.dummy_input)
+                self.sparsity_allocator = Conv2dDependencyAwareAllocator(self, self.dim, self.dummy_input, block_sparse_size=self.block_sparse_size)
+            elif self.mode == 'transformer':
+                self.sparsity_allocator = AttentionHeadDependencyAwareAllocator(self, self.dim, self.dummy_input, block_sparse_size=self.block_sparse_size)
             else:
                 raise NotImplementedError('Only support mode `normal`, `global` and `dependency_aware`')
 
